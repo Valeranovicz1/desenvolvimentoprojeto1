@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise WiFi - Gerenciar Residências</title>
+    <link rel="stylesheet" href="../assets/css/styleresidencia.css"> 
+</head>
+<body>
+
+    <h1>Gerenciador de Residências</h1>
+
+    <div class="container">
+        <div class="form-container">
+            <h2>Cadastrar Nova Residência</h2>
+            <form id="residenciaForm">
+                <div>
+                    <label for="nomeResidencia">Nome da Residência:</label>
+                    <input type="text" id="nomeResidencia" required>
+                </div>
+                <div>
+                    <label for="endereco">Endereço:</label>
+                    <input type="text" id="endereco" required>
+                </div>
+                <button type="submit">Adicionar Residência</button>
+            </form>
+            <div id="feedback"></div>
+        </div>
+
+        <div class="table-container">
+            <h2>Residências Cadastradas</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Endereço</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="residenciasTable">
+                    </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="../assets/js/scriptresidencia.js" defer></script>
+
+</body>
+</html>

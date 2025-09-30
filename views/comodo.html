@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análise WiFi - Gerenciar Cômodos</title>
+    <link rel="stylesheet" href="../assets/css/stylecomodo.css">
+</head>
+<body>
+
+    <h1>Gerenciar Cômodos da Residência: <span id="nomeResidencia"></span></h1>
+
+    <div class="container">
+        <div class="form-container">
+            <h2 id="formComodoTitle">Cadastrar Novo Cômodo</h2>
+            <form id="comodoForm">
+                <input type="hidden" id="comodoId">
+                <div>
+                    <label for="comodoNome">Nome do Cômodo:</label>
+                    <input type="text" id="comodoNome" required>
+                </div>
+                <button type="submit" id="btnSalvarComodo">Salvar Cômodo</button>
+            </form>
+            <a href="residencia.html" class="nav-link">Cadastrar ou Trocar de Residência</a>
+        </div>
+
+        <div class="table-container">
+            <h2>Cômodos Cadastrados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nome do Cômodo</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody id="comodosTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="../assets/js/scriptcomodo.js" defer></script>
+
+</body>
+</html>
