@@ -1,6 +1,6 @@
 <?php
-// models/Residencia.php
-require_once __DIR__ . '/Database.php'; // Caminho absoluto é mais seguro
+
+require_once __DIR__ . '/Database.php'; 
 
 class Residencia {
     private $db;
@@ -12,7 +12,6 @@ class Residencia {
     public function getAll() {
         $stmt = $this->db->query("SELECT * FROM residencia ORDER BY nome");
         
-        // CORREÇÃO: Force o modo associativo aqui.
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
     
@@ -20,7 +19,6 @@ class Residencia {
         $stmt = $this->db->prepare("SELECT * FROM residencia WHERE id = ?");
         $stmt->execute([$id]);
         
-        // CORREÇÃO: Force o modo associativo aqui também.
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
 

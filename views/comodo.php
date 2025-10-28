@@ -1,5 +1,5 @@
 <?php
-// views/comodo_view.php
+
 if (!defined('APP_LOADED')) {
     die('Acesso direto não permitido.');
 }

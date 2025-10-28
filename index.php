@@ -1,41 +1,27 @@
 <?php
-// index.php (Corrigido para Case-Sensitivity e Redirecionamento)
+
 session_start();
 
-// 1. Carrega o Autoloader do Composer
 require_once __DIR__ . '/vendor/autoload.php';
 
-// 2. Carrega nossos Models
 require_once __DIR__ . '/models/Database.php';
 require_once __DIR__ . '/models/Residencia.php';
 require_once __DIR__ . '/models/Comodo.php';
 require_once __DIR__ . '/models/Medicao.php';
 
-// 3. Importa as classes do Roteador
+
 use Pecee\SimpleRouter\SimpleRouter as Router;
 use Pecee\Http\Request;
-
-// =======================================================
-// INÍCIO DO ROTEADOR PECEE
-// =======================================================
 
 Router::setDefaultNamespace('\App\Controllers');
 define('APP_LOADED', true);
 
-// --- CÁLCULO DO BASE PATH ---
 $baseDir = dirname($_SERVER['SCRIPT_NAME']);
 if ($baseDir === '/' || $baseDir === '\\') {
     $baseDir = ''; 
 }
 
-// =======================================================
-// INÍCIO DO GRUPO DE ROTAS
-// =======================================================
-Router::group(['prefix' => $baseDir], function () use ($baseDir) { // <-- $baseDir é passado para o grupo
-
-    // -------------------------------------
-    // ROTAS GET (Carregar Páginas)
-    // -------------------------------------
+Router::group(['prefix' => $baseDir], function () use ($baseDir) { 
 
     Router::get('/', function() {
         $residenciaModel = new Residencia();
@@ -43,11 +29,11 @@ Router::group(['prefix' => $baseDir], function () use ($baseDir) { // <-- $baseD
         require __DIR__ . '/views/residencia.php';
     });
     
-    Router::get('/comodos', function() use ($baseDir) { // <-- $baseDir é passado aqui
+    Router::get('/comodos', function() use ($baseDir) { 
         if (!isset($_SESSION['residencia_id'])) {
-            // CORREÇÃO: Redireciona para a URL base correta
+
             \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/');
-            exit; // Adiciona exit para parar a execução
+            exit; 
         }
         $comodoModel = new Comodo();
         $comodos = $comodoModel->getAllByResidencia($_SESSION['residencia_id']);
@@ -55,11 +41,11 @@ Router::group(['prefix' => $baseDir], function () use ($baseDir) { // <-- $baseD
         require __DIR__ . '/views/comodo.php';
     });
     
-    Router::get('/medicoes', function() use ($baseDir) { // <-- $baseDir é passado aqui
+    Router::get('/medicoes', function() use ($baseDir) { 
         if (!isset($_SESSION['comodo_id'])) {
-            // CORREÇÃO: Redireciona para a URL correta
+
             \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/comodos');
-            exit; // Adiciona exit para parar a execução
+            exit; 
         }
         $medicaoModel = new Medicao();
         $medicoes = $medicaoModel->getAllByComodo($_SESSION['comodo_id']);
@@ -67,10 +53,6 @@ Router::group(['prefix' => $baseDir], function () use ($baseDir) { // <-- $baseD
         $comodo_nome = $_SESSION['comodo_nome'];
         require __DIR__ . '/views/medicao.php';
     });
-
-    // -------------------------------------
-    // ROTAS POST (Processar Formulários)
-    // -------------------------------------
 
     Router::post('/residencias/add', function() use ($baseDir) {
         if (!empty($_POST['nomeResidencia'])) {
@@ -90,7 +72,7 @@ Router::group(['prefix' => $baseDir], function () use ($baseDir) { // <-- $baseD
         $residenciaModel = new Residencia();
         $residencia = $residenciaModel->getById($id);
         if ($residencia) {
-            // CORREÇÃO DE CASE SENSITIVITY: De 'id' para 'Id' e 'nome' para 'Nome'
+           
             $_SESSION['residencia_id'] = $residencia['Id'];
             $_SESSION['residencia_nome'] = $residencia['Nome'];
             unset($_SESSION['comodo_id']);
@@ -99,7 +81,6 @@ Router::group(['prefix' => $baseDir], function () use ($baseDir) { // <-- $baseD
         \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/comodos');
     });
 
-    // --- AÇÕES DE CÔMODO ---
     Router::post('/comodos/add', function() use ($baseDir) {
         if (!empty($_POST['comodoNome']) && isset($_SESSION['residencia_id'])) {
             $comodoModel = new Comodo();
@@ -118,14 +99,14 @@ Router::group(['prefix' => $baseDir], function () use ($baseDir) { // <-- $baseD
         $comodoModel = new Comodo();
         $comodo = $comodoModel->getById($id);
         if ($comodo) {
-            // CORREÇÃO DE CASE SENSITIVITY (Preventiva): Assumindo 'Id' e 'Nome'
+
             $_SESSION['comodo_id'] = $comodo['Id']; 
             $_SESSION['comodo_nome'] = $comodo['Nome'];
         }
         \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/medicoes');
     });
 
-    // --- AÇÕES DE MEDIÇÃO ---
+
     Router::post('/medicoes/add', function() use ($baseDir) {
         if (isset($_SESSION['comodo_id'])) {
             $medicaoModel = new Medicao();
@@ -145,9 +126,8 @@ Router::group(['prefix' => $baseDir], function () use ($baseDir) { // <-- $baseD
         \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/medicoes');
     });
 
-}); // FIM DO GRUPO DE ROTAS
+});
 
-// Rota de 404
 Router::error(function(Request $request, \Exception $exception) {
     if($exception instanceof \Pecee\SimpleRouter\Exceptions\NotFoundHttpException) {
         $request->setRewriteCallback(function() {
@@ -156,5 +136,4 @@ Router::error(function(Request $request, \Exception $exception) {
     }
 });
 
-// Inicia o roteador
 Router::start();
