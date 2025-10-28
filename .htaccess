@@ -1,14 +1,10 @@
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # ATENÇÃO: Altere '/projeto_wifi_php/' se o nome da sua pasta no htdocs for diferente.
-    # Se o projeto estiver na raiz (http://localhost/), mude para '/'
     RewriteBase /desenvolvimentoprojeto/
 
-    # Redireciona para o index.php se o arquivo ou diretório solicitado não existir
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
 
-    # Envia todas as requisições para o seu roteador principal
     RewriteRule . index.php [L]
 </IfModule>
