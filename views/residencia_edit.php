@@ -1,11 +1,9 @@
 <?php
-// views/residencia_edit_view.php
 
-// Proteção contra acesso direto
 if (!defined('APP_LOADED')) {
     die('Acesso direto não permitido.');
 }
-// A variável $residencia vem do index.php (rota GET /residencias/edit/{id})
+
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
