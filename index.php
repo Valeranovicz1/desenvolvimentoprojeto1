@@ -29,15 +29,18 @@ Router::group(['prefix' => $baseDir], function () use ($baseDir) {
         require __DIR__ . '/views/residencia.php';
     });
     
-    Router::get('/comodos', function() use ($baseDir) { 
+    Router::get('/comodos', function() use ($baseDir) {
         if (!isset($_SESSION['residencia_id'])) {
-
             \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/');
-            exit; 
+            exit;
         }
+        
         $comodoModel = new Comodo();
-        $comodos = $comodoModel->getAllByResidencia($_SESSION['residencia_id']);
+        
+        $comodos = $comodoModel->getAllWithAvgMeasurements($_SESSION['residencia_id']); 
+        
         $residencia_nome = $_SESSION['residencia_nome'];
+        
         require __DIR__ . '/views/comodo.php';
     });
     
@@ -62,6 +65,18 @@ Router::group(['prefix' => $baseDir], function () use ($baseDir) {
         \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/');
     });
 
+    Router::post('/residencias/update', function() use ($baseDir) {
+
+        $id = $_POST['id'];
+        $nome = $_POST['nomeResidencia'];
+        $endereco = $_POST['endereco'];
+
+        $residenciaModel = new Residencia();
+        $residenciaModel->update($id, $nome, $endereco);
+
+        \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/');
+    });
+
     Router::get('/residencias/delete/{id}', function($id) use ($baseDir) {
         $residenciaModel = new Residencia();
         $residenciaModel->delete($id);
@@ -79,6 +94,18 @@ Router::group(['prefix' => $baseDir], function () use ($baseDir) {
             unset($_SESSION['comodo_nome']);
         }
         \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/comodos');
+    });
+
+    Router::get('/residencias/edit/{id}', function($id) use ($baseDir) {
+        $residenciaModel = new Residencia();
+
+        $residencia = $residenciaModel->getById($id);
+
+        if (!$residencia) {
+            \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/');
+        }
+
+        require __DIR__ . '/views/residencia_edit.php';
     });
 
     Router::post('/comodos/add', function() use ($baseDir) {
@@ -106,6 +133,18 @@ Router::group(['prefix' => $baseDir], function () use ($baseDir) {
         \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/medicoes');
     });
 
+    Router::post('/comodos/update', function() use ($baseDir) {
+
+        $id = $_POST['comodoId'];
+        $nome = $_POST['comodoNome'];
+
+        if (!empty($id) && !empty($nome)) {
+            $comodoModel = new Comodo();
+            $comodoModel->update($id, $nome);
+        }
+
+        \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/comodos');
+    });
 
     Router::post('/medicoes/add', function() use ($baseDir) {
         if (isset($_SESSION['comodo_id'])) {
@@ -126,7 +165,21 @@ Router::group(['prefix' => $baseDir], function () use ($baseDir) {
         \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/medicoes');
     });
 
-});
+    });
+
+    Router::post('/medicoes/update', function() use ($baseDir) {
+        $id = $_POST['medicaoId']; 
+        $nivelSinal = $_POST['nivelSinal'];
+        $velocidade = $_POST['velocidade'];
+        $interferencia = $_POST['interferencia'];
+
+        if (!empty($id)) {
+            $medicaoModel = new Medicao();
+            $medicaoModel->update($id, $nivelSinal, $velocidade, $interferencia);
+        }
+
+        \Pecee\SimpleRouter\SimpleRouter::response()->redirect($baseDir . '/medicoes');
+    });
 
 Router::error(function(Request $request, \Exception $exception) {
     if($exception instanceof \Pecee\SimpleRouter\Exceptions\NotFoundHttpException) {

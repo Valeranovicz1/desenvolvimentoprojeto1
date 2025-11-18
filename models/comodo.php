@@ -30,5 +30,20 @@ class Comodo {
         $stmt = $this->db->prepare("DELETE FROM comodo WHERE id = ?");
         return $stmt->execute([$id]);
     }
+
+    public function update($id, $nome) {
+        $stmt = $this->db->prepare("UPDATE comodo SET Nome = ? WHERE Id = ?");
+        return $stmt->execute([$nome, $id]);
+    }
+
+    public function getAllWithAvgMeasurements($residencia_id) {
+        
+
+        $sql = "SELECT  c.Id, c.Nome, AVG(m.Nivel_Sinal) AS avg_sinal, AVG(m.Velocidade) AS avg_velocidade, AVG(m.Interferencia) AS avg_interferenciaROM comodo cLEFT JOIN medicoes m ON c.Id = m.IdComodo WHERE c.IdResidencia = ? GROUP BY c.Id, c.Nome ORDER BY c.Nome";
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([$residencia_id]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
-?>
+?>  

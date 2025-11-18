@@ -31,5 +31,11 @@ class Residencia {
         $stmt = $this->db->prepare("DELETE FROM residencia WHERE id = ?");
         return $stmt->execute([$id]);
     }
+    
+    public function update($id, $nome, $endereco) {
+
+        $stmt = $this->db->prepare("UPDATE residencia SET Nome = ?, Endereco = ? WHERE Id = ?");
+        return $stmt->execute([$nome, $endereco, $id]);
+    }
 }
 ?>

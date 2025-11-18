@@ -1,7 +1,5 @@
 <?php
-// views/templates/header.php
 
-// Proteção contra acesso direto
 if (!defined('APP_LOADED')) {
     die('Acesso direto não permitido.');
 }
@@ -15,7 +13,6 @@ if ($page == 'comodo') {
     $cssFile = 'stylemedicao.css';
 }
 
-// Obtém a URL base (ex: /desenvolvimentoprojeto/)
 $baseUrl = \Pecee\SimpleRouter\SimpleRouter::getUrl('/');
 ?>
 <!DOCTYPE html>

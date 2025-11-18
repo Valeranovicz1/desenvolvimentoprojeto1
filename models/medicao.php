@@ -24,5 +24,13 @@ class Medicao {
         $stmt = $this->db->prepare("DELETE FROM medicoes WHERE id = ?");
         return $stmt->execute([$id]);
     }
+
+    public function update($id, $nivelSinal, $velocidade, $interferencia) {
+
+        $stmt = $this->db->prepare(
+            "UPDATE medicoes SET Nivel_Sinal = ?, Velocidade = ?, Interferencia = ? WHERE Id = ?"
+        );
+        return $stmt->execute([$nivelSinal, $velocidade, $interferencia, $id]);
+    }
 }
 ?>
